@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+sudo apt update
+sudo apt upgrade -y
+
 echo "pull gitlgbt/infa"
 git pull
 
