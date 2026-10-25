@@ -25,7 +25,21 @@ update git.lgbt
 ```bash
 ./update.sh
 ```
+install page will be at
+<br>
+[http://127.0.0.1:3001/](http://127.0.0.1:3001/)
 
+you can point tunnel or proxy manager to 
+```bash
+http://serverip:3001/
+```
+
+to stop the server
+```bash
+docker stop $(docker ps -q)
+```
+
+user data will be at `forgejo-data` DO NOT DELETE IT
 
 ---
 <br>

@@ -15,4 +15,5 @@ docker compose up -d --force-recreate
 
 echo "complete"
 
+
 # tbh this is the same things as update i just think it look better to have to file lol
