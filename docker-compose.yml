@@ -15,4 +15,5 @@ services:
       - ./forgejo-data:/data
       - ./theme/public:/data/gitea/public
       - ./theme/templates:/data/gitea/templates
+      - ./theme/options:/data/gitea/options
       - /etc/localtime:/etc/localtime:ro
