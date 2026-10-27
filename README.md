@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/gitlgbt/forgejo/refs/heads/main/assets/logo.svg" alt="git.lgbt Logo" width="192" />
+  <img src="https://git.lgbt/gitlgbt/branding/raw/branch/main/svg/gitlgbtinfra.svg" alt="gitlgbt infra Logo" width="192" />
   <h1>gitlgbt/Infa</h1>
   <p><strong>Infrastructure deploy code for <a href="https://git.lgbt">git.lgbt</a></strong></p>
 </div>
