@@ -1,6 +1,6 @@
 services:
   forgejo:
-    image: git.lgbt/gitlgbt/forgejo:latest
+    image: git.lgbt/gitlgbt/forgejo:v17.0.1-dotlgbt
     container_name: forgejo-prod
     restart: always
     ports:
