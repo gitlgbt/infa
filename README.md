@@ -10,14 +10,9 @@ this is an deploy file for gitlgbt
 install git and clone this repo
 ```bash
 sudo apt update && sudo apt install -y git
-git clone https://github.com/gitlgbt/infa.git
+git clone --depth 1 https://git.lgbt/gitlgbt/infa.git
 cd infa
-```
-
-install git.lgbt
-```bash
-chmod +x update.sh
-chmod +x install.sh
+chmod +x update.sh install.sh
 ./install.sh
 ```
 

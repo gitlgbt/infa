@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+cd "$(dirname "$0")"
 
 if [ "$EUID" -ne 0 ]; then
     SUDO="sudo"
@@ -23,30 +24,24 @@ if ! command -v docker &> /dev/null; then
 
     $SUDO apt update
     $SUDO apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    
+
     if [ -n "$SUDO" ]; then
-        $SUDO usermod -aG docker $USER
+        $SUDO usermod -aG docker "$USER"
     fi
     echo "Docker installed"
 else
     echo "Docker is already installed skip"
 fi
 
-echo "pull gitlgbt/infa"
-git pull
+echo "running update.sh"
 
+if [ -n "$SUDO" ] && ! docker info &> /dev/null; then
+    sg docker -c "./update.sh"
+else
+    ./update.sh
+fi
 
-# here for some reason the submodule update is dumb or maybe i'm dumb just re add it
-echo "cleaning up theme "
-rm -rf theme
-
-echo "pull gitlgbt/theme"
-git submodule update --init --recursive --remote --merge
-
-echo "pull docker file"
-docker compose pull
-
-echo "Starting git.lgbt"
-docker compose up -d --force-recreate
+echo "cleaning up files"
+rm -rf .git .gitmodules .gitignore .dockerignore README.md LICENSE
 
 echo "complete"
