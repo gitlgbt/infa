@@ -6,7 +6,9 @@ cd "$(dirname "$0")"
 if [ "$EUID" -ne 0 ]; then SUDO="sudo"; else SUDO=""; fi
 
 PRIMARY="https://git.lgbt/gitlgbt"
-FALLBACK="https://github.com/gitlgbt"  
+FALLBACK="https://github.com/gitlgbt"
+MONO_PRIMARY="https://git.lgbt/Fryrvo/forgejo_template"
+MONO_FALLBACK="https://github.com/fryrvos/forgejo_template"
 
 $SUDO apt update
 $SUDO apt upgrade -y
@@ -38,6 +40,24 @@ fetch() {
     return 1
 }
 
+fetch_frontends() {
+    for url in "$MONO_PRIMARY/archive/main.tar.gz" "$MONO_FALLBACK/archive/refs/heads/main.tar.gz"; do
+        rm -rf "$TMP/mono" "$TMP/frontends"
+        mkdir -p "$TMP/mono" "$TMP/frontends"
+        echo "downloading forgejo_template from ${url%/archive/*}"
+        if curl -fsSL --retry 2 "$url" | tar -xz -C "$TMP/mono" --strip-components=1; then
+            for d in "$TMP/mono"/*/; do
+                if [ -d "${d}templates" ] || [ -d "${d}public" ]; then
+                    cp -r "$d" "$TMP/frontends/$(basename "$d")"
+                fi
+            done
+            return 0
+        fi
+        echo "failed from ${url%/archive/*}, trying next"
+    done
+    return 1
+}
+
 fetch infa  "$TMP"       docker-compose.yml update.sh install.sh
 fetch theme "$TMP/theme" public templates options
 
@@ -46,12 +66,23 @@ for d in public templates options; do
 done
 chmod +x "$TMP/update.sh" "$TMP/install.sh"
 
+if ! fetch_frontends; then
+    echo "forgejo_template not available or empty, keeping current frontends" >&2
+    rm -rf "$TMP/frontends"
+    mkdir -p "$TMP/frontends"
+    if [ -d theme/fryrvo_template_switcher ]; then
+        cp -r theme/fryrvo_template_switcher/. "$TMP/frontends/"
+    fi
+fi
+mv "$TMP/frontends" "$TMP/theme/fryrvo_template_switcher"
+echo "frontends: $(ls "$TMP/theme/fryrvo_template_switcher" | tr '\n' ' ')"
+
 
 rm -rf theme
 mv "$TMP/theme" theme
 mv "$TMP/docker-compose.yml" docker-compose.yml
 mv "$TMP/install.sh" install.sh
-mv "$TMP/update.sh" update.sh   
+mv "$TMP/update.sh" update.sh
 echo "pull docker image"
 docker compose pull
 
